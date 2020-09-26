@@ -22,7 +22,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Common json utilities, a helper class
+ * Common json utilities, this is a helper class.  It uses
+ * jackson to convert from java objects to json strings and vica
+ * versa.
  * 
  * @author sduffy
  */
@@ -31,6 +33,7 @@ public class JsonUtils {
   private static final boolean DEBUG = true;
 
   public JsonUtils() {
+    // Main thing our code needs is a jackson objectmapper
     mapper = new ObjectMapper();
     mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
   }
@@ -59,9 +62,9 @@ public class JsonUtils {
  
   
   /**
-   * Takes in a pojo and returns it as a string that has been 'prettified' :)
+   * Takes in a pojo and returns it as a json string repsentation of it
    * @param _object
-   * @return A 'prettified' string version of the json node
+   * @return A string version of the pojo
    */
   public String getJsonStringFromPojo(Object _pojo) {
  
@@ -77,7 +80,14 @@ public class JsonUtils {
     return "Error with getJsonStringFromPojo\n" + _pojo.toString(); // Should never get here :(
   }
   
-  
+  /**
+   * Return a java pojo from a json string
+   * 
+   * @param <T>
+   * @param _jsonString  a json string representing the pojo
+   * @param genericClass  the class of the object returned 
+   * @return  the pojo
+   */
   public <T> T getPojoFromJsonString(String _jsonString, Class<T> genericClass) {
     try {
       return (T)mapper.readValue(_jsonString,genericClass);
@@ -90,11 +100,21 @@ public class JsonUtils {
     
     return null;
   }
-    
+ 
+  /**
+   * Little helper when want to dump out a JsonNode and don't need a prefix, it
+   * just calls the other method and passes in a prefix of ""
+   * @param _jsonNode  the node to inspect
+   */
   public void dumpNode(JsonNode _jsonNode) {
     dumpNode(_jsonNode,"");
   }
   
+  /**
+   * Helper to dump out information about the JsonNode passed in
+   * @param _jsonNode  the JsonNode to inspect
+   * @param _prefix  a string to use a prefix; mainly for clarifying the record written out
+   */
   public void dumpNode(JsonNode _jsonNode, String _prefix) {
     Iterator<String> fieldNames = _jsonNode.fieldNames();
     
@@ -151,7 +171,7 @@ public class JsonUtils {
   
   /**
    * Return the json string in a more readable format
-   * @param _jsonString
+   * @param _jsonString  The json string 
    * @return The jsonString that has been 'prettified'
    */
   public String prettifyIt(String _jsonString) {
@@ -170,8 +190,7 @@ public class JsonUtils {
   public JsonNode getJsonNodeForJsonString(String _jsonString) {
     JsonNode rtnNode = null;
 
-    try {
-      // Not sure why the example did this
+    try {    
       rtnNode = mapper.readValue(_jsonString, JsonNode.class);
     }
     /*
@@ -191,10 +210,11 @@ public class JsonUtils {
   }
   
   /** 
-   * Return a JsonNode for a key/value pair 
+   * Return a JsonNode for a key/value pair; basically takes a key value and
+   * returns a JsonNode of it i.e. JsonNode({ "key" : "value" })
    * @param _key
    * @param _value
-   * @return
+   * @return JsonNode version of key/value pair
    */
   public JsonNode getJsonNodeForKeyAndValue(String _key, String _value) {    
     return getJsonNodeForJsonString(getJsonStringForKeyAndValue(_key, _value));
@@ -213,6 +233,14 @@ public class JsonUtils {
     return "{ \"" + _key.trim() + "\" : \"" + value + "\"}";
   }
   
+  /**
+   * Return a java pojo from a JsonNode; you also pass in the class of the pojo
+   * created.  Look at TestJsonDeserialization for example of usage :)
+   * @param <T> 
+   * @param jsonNode  A JsonNode (json version of the pojo)
+   * @param genericClass The class of the object returned
+   * @return A pojo of that's of type 'genericClass' that you also pass in 
+   */
   public <T> T getPojoFromJsonNode(JsonNode jsonNode, Class<T> genericClass) {
     try {
       return (T)mapper.treeToValue(jsonNode,genericClass);
@@ -223,6 +251,11 @@ public class JsonUtils {
     return null;
   }
   
+  /**
+   * Little helper to dump out all the properties of the class passed in
+   * 
+   * @param genericClass
+   */
   public void dumpInfo(Class<?> genericClass) {
     BeanInfo beanInfo;
     try {
@@ -237,7 +270,12 @@ public class JsonUtils {
   }
   
   
-  // Return the field in the node as a text string
+  /**
+   * Returns the field (theField) in the JsonNode as a string
+   * @param jNode  the JsonNode
+   * @param theField  the field you want extracted
+   * @return  a String representation of the field
+   */
   public String getText(JsonNode jNode, String theField) {
     String rtnString = null;
     
@@ -258,7 +296,12 @@ public class JsonUtils {
     return rtnString;
   }
 
-  // Return the boolean field in the node
+  /**
+   * Returns a boolean representation of the field (theField) in the JsonNode passed in
+   * @param jNode  the JsonNode
+   * @param theField  the field we want returned (as a boolean)
+   * @return Boolean representation of the field
+   */
   public Boolean getBoolean(JsonNode jNode, String theField) {
     Boolean rtnValue = false;  // Default it to false (has to be something :))
     
@@ -274,7 +317,12 @@ public class JsonUtils {
     return rtnValue;
   }
 
-  //Return the boolean field in the node
+  /**
+   * Return 'int' value of 'theField' in JsonNode   * 
+   * @param jNode  the JsonNode to extract the value from
+   * @param theField  the field we want extracted
+   * @return  an 'int' version of 'theField'
+   */
   public int getInt(JsonNode jNode, String theField) {
     int rtnValue = 0;  // Default to 0 (has to be something :))
    
@@ -290,7 +338,13 @@ public class JsonUtils {
     return rtnValue;
   }
   
-  // Return the JsonNode for the field value passed in  
+  
+  /**
+   * Return the JsonNode for field (theField) within the JsonNode passed in
+   * @param jNode  the JsonNode
+   * @param theField  the field desired
+   * @return  A JsonNode representation of the field (theField)
+   */
   public JsonNode getJsonNode(JsonNode jNode, String theField) {
     JsonNode rtnNode = null;
     
@@ -303,7 +357,13 @@ public class JsonUtils {
     return rtnNode;
   }  
  
-  // Return timestamp for the given field
+  
+  /**
+   * Return a java.sql.Timestamp for the field (theField) within the JsonNode 
+   * @param jNode  the JsonNode
+   * @param theField  the field we want
+   * @return  a Timestamp representation of the field
+   */
   public java.sql.Timestamp getTimestamp(JsonNode jNode, String theField) {
     java.sql.Timestamp rtnValue = null;
        
@@ -315,23 +375,4 @@ public class JsonUtils {
     }    
     return rtnValue;
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 }

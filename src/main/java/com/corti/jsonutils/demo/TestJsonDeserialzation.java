@@ -10,6 +10,13 @@ import com.corti.jsonutils.JsonUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.nio.file.attribute.FileTime;
 
+/**
+ * This is just a little stub of code to show you how to work with the
+ * JsonUtilities and how to serialize/deserialize objects.
+ * 
+ * @author S. Duffy
+ *
+ */
 public class TestJsonDeserialzation {
   private static final boolean DEBUGIT = true;
   
@@ -72,7 +79,6 @@ public class TestJsonDeserialzation {
       listObjAfter.add(aNewObj);
       if (DEBUGIT) logger.info("After: " + aNewObj.toString());
     }
-    
     
     // Down here list the before and after lists... they should be the same after
     //   objects have been serialized/deserialized.
