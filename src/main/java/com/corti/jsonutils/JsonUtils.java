@@ -5,7 +5,6 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -199,11 +198,10 @@ public class JsonUtils {
      * System.out.println("jsonOutString:"+jsonOutString);
      * httpPost.setEntity(entity); response= client.execute(httpPost); }
      */
-    catch (UnsupportedEncodingException e) {
+    catch (JsonProcessingException e) {
       e.printStackTrace();
-    } catch (ClientProtocolException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
+    } 
+    catch (IOException e) {
       e.printStackTrace();
     }
     return rtnNode;
