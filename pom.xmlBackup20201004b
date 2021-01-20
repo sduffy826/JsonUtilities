@@ -19,12 +19,23 @@
 			</plugin>
 			
 			<plugin>
-	          <artifactId>maven-assembly-plugin</artifactId>
+			  <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+              <execution>
+                <id>copy-dependencies</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>copy-dependencies</goal>
+                </goals>
                 <configuration>
-                <descriptorRefs>
-                  <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
+                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                  <overWriteReleases>false</overWriteReleases>
+                  <overWriteSnapshots>false</overWriteSnapshots>
+                  <overWriteIfNewer>true</overWriteIfNewer>
                 </configuration>
+                </execution>
+              </executions>
 			</plugin>
 			
 		</plugins>
