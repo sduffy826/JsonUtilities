@@ -34,7 +34,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- Use the latest version whenever possible. -->
-		<jackson.version>2.11.4</jackson.version>  <!-- 2.9.0.pr3 -->
+		<jackson.version>2.13.4.1</jackson.version>  <!-- 2.9.0.pr3 -->
 	</properties>
 	<dependencies>
 		<dependency>
